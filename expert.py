@@ -23,7 +23,7 @@ class LinearExpert1d(Expert): # when loss function is specified by a response va
 		return "started at time " + str(self.start)
 
 	def eval_model(self, model, point):
-		return model.predict(np.array(point).reshape(-1, 1))
+		return model.predict(np.array(point).reshape(-1, 1))[0]
 
 	def predict(self, x, t):
 		# print("t = ", t)
@@ -39,7 +39,7 @@ class LinearExpert1d(Expert): # when loss function is specified by a response va
 			pred = self.history_y[t-1]	
 		else:
 			reg = LinearRegression().fit(np.array(self.history_x).reshape(-1, 1), np.array(self.history_y))
-			pred = self.eval_model(reg, x)[0]
+			pred = self.eval_model(reg, x)
 
 		self.history_x.append(x)
 		self.predictions.append(pred)

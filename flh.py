@@ -4,9 +4,11 @@ import numpy as np
 class FLH:
 	lr = .5
 
-	def __init__(self, T, expert = LinearExpert1d(1)):
+	def __init__(self, X, Y, T, expert = LinearExpert1d(1)):
 		self.T = T
 		self.t = 1
+		self.X = X
+		self.Y = Y
 		self.experts = [expert]
 		self.weights = [1]
 		self.loss = 0
@@ -23,7 +25,7 @@ class FLH:
 
 		pred = np.dot(np.array(self.weights), np.array(x_experts))
 		self.predictions.append(pred)
-		
+
 		loss_t = (pred - y)**2
 		self.loss = self.loss + loss_t
 
@@ -41,14 +43,15 @@ class FLH:
 
 		self.t = self.t + 1
 
-	def run(self, X, Y):
+	def run(self):
 		W = []
+
 		for j in range(self.T):
 			W.append(self.weights + (self.T - self.t)*[0])
-			print("W = ", W)
-			self.__step(X[j], Y[j])
+			self.__step(self.X[j], self.Y[j])
 			
 		print("loss = ", self.loss)
+		self.W = np.array(W)
 		return np.array(W)
 
 
